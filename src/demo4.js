@@ -17,9 +17,14 @@ async function downMusic(music) {
         await page.keyboard.press('Enter');
 
         // 获取歌曲列表的 iframe
-        await page.waitFor(3000);
+
+        // await page.waitFor(2000)
+        // await page.waitForSelector("#m-search");
 
         let iframe = await page.frames().find(f => f.name() === 'contentFrame');
+
+        await iframe.waitForSelector('.srchsongst')
+
         const SONG_LS_SELECTOR = await iframe.$('.srchsongst');
 
         // 获取歌曲 songName 的列表信息
@@ -46,11 +51,12 @@ async function downMusic(music) {
 
         await page.goto(selected ? selected.href : songList[0].href);
 
-        // 获取歌曲页面嵌套的 iframe
-        await page.waitFor(3000);
+        // 获取歌曲页面嵌套的 iframe        
         iframe = await page.frames().find(f => f.name() === 'contentFrame');
 
         // 点击 展开按钮
+        await iframe.waitForSelector("#flag_ctrl");
+
         const unfoldButton = await iframe.$('#flag_ctrl');
         await unfoldButton.click();
 
